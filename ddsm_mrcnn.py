@@ -11,32 +11,32 @@ import os
 from mmdet.apis import set_random_seed
 
 # Modify dataset type and path
-cfg = Config.fromfile('configs/mask_rcnn/mask_rcnn_r50_caffe_fpn_mstrain-poly_1x_coco.py')
+cfg = Config.fromfile('ddsm_mrcnn_config.py')
 cfg.dataset_type = 'COCODataset'
 cfg.data.samples_per_gpu=2
 cfg.data.workers_per_gpu=1
-cfg.data.test.ann_file = '/home/xumingjie/dataset/balloon/val/annotation_coco.json'
-cfg.data.test.img_prefix = '/home/xumingjie/dataset/balloon//val/'
-cfg.data.test.classes = ('balloon',)
+cfg.data.test.ann_file = '/home/xumingjie/dataset/ddsm_coco/ddsm_coco/val/annotation_coco.json'
+cfg.data.test.img_prefix = '/home/xumingjie/dataset/ddsm_coco/ddsm_coco/val/'
+cfg.data.test.classes = ('be_calc','be_mass','ma_calc','ma_mass')
 
-cfg.data.train.ann_file = '/home/xumingjie/dataset/balloon//train/annotation_coco.json'
-cfg.data.train.img_prefix = '/home/xumingjie/dataset/balloon//train/'
-cfg.data.train.classes = ('balloon',)
+cfg.data.train.ann_file = '/home/xumingjie/dataset/ddsm_coco/ddsm_coco/train/annotation_coco.json'
+cfg.data.train.img_prefix = '/home/xumingjie/dataset/ddsm_coco/ddsm_coco/train/'
+cfg.data.train.classes = ('be_calc','be_mass','ma_calc','ma_mass')
 
 
-cfg.data.val.ann_file = '/home/xumingjie/dataset/balloon//val/annotation_coco.json'
-cfg.data.val.img_prefix = '/home/xumingjie/dataset/balloon//val/'
-cfg.data.val.classes = ('balloon',)
+cfg.data.val.ann_file = '/home/xumingjie/dataset/ddsm_coco/ddsm_coco/val/annotation_coco.json'
+cfg.data.val.img_prefix = '/home/xumingjie/dataset/ddsm_coco/ddsm_coco/val/'
+cfg.data.val.classes = ('be_calc','be_mass','ma_calc','ma_mass')
 
 # modify num classes of the model in box head and mask head
-cfg.model.roi_head.bbox_head.num_classes = 1
-cfg.model.roi_head.mask_head.num_classes = 1
+cfg.model.roi_head.bbox_head.num_classes = 4
+cfg.model.roi_head.mask_head.num_classes = 4
 
 # We can still the pre-trained Mask RCNN model to obtain a higher performance
 cfg.load_from = 'checkpoints/mask_rcnn_r50_caffe_fpn_mstrain-poly_3x_coco_bbox_mAP-0.408__segm_mAP-0.37_20200504_163245-42aa3d00.pth'
 
 # Set up working dir to save files and logs.
-cfg.work_dir = './tutorial_exps'
+cfg.work_dir = 'logs/ddsm_mrcnn'
 
 # The original learning rate (LR) is set for 8-GPU training.
 # We divide it by 8 since we only use one GPU.

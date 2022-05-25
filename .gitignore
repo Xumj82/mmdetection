@@ -118,7 +118,7 @@ docs/modelzoo_statistics.md
 mmdet/.mim
 work_dirs/
 tutorial_exps
-
+logs
 # Pytorch
 *.pth
 *.py~

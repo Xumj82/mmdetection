@@ -135,20 +135,29 @@ class LoadMMImageFromFile:
         else:
             filename = results['img_info']['filename']
 
-        img_bytes = self.file_client.get(filename)
+        img = cv2.imread(filename, cv2.IMREAD_ANYDEPTH)
+        img = np.expand_dims(img, axis=-1)
+        img = np.repeat(img, 3, axis=-1)
+        img = img.astype(np.float32)
+        img = (img-img.min())/img.max()*255
+        # img_bytes = self.file_client.get(filename)
 
-        img_np = np.frombuffer(img_bytes, np.uint16)
-        flag = mmcv.image.io.imread_flags[flag] if mmcv.utils.is_str(flag) else flag
-        img = cv2.imdecode(img_np, flag)
-        if flag == cv2.IMREAD_COLOR and self.channel_order == 'rgb':
-            cv2.cvtColor(img, cv2.COLOR_BGR2RGB, img)
-        # return img
-        if self.to_float32:
-            img = img.astype(np.float32)
+        # # img_np = np.frombuffer(img_bytes, np.uint8)
+        # flag = mmcv.image.io.imread_flags[self.color_type] if mmcv.utils.is_str(self.color_type) else self.color_type
+        # # img = cv2.imdecode(img_np, flag)
+        # if flag == cv2.IMREAD_COLOR and self.channel_order == 'rgb':
+        #     cv2.cvtColor(img, cv2.COLOR_BGR2RGB, img)
+        # # return img
+        # # cv2.imshow('graycsale image',img)
+        # # cv2.waitKey(0)
+        # # cv2.destroyAllWindows()    
+        # if self.to_float32:
+        #     img = img.astype(np.float32)
 
         results['filename'] = filename
         results['ori_filename'] = results['img_info']['filename']
         results['img'] = img
+        results['gt_img_label'] = results['img_info']['label']
         results['img_shape'] = img.shape
         results['ori_shape'] = img.shape
         results['img_fields'] = ['img']
